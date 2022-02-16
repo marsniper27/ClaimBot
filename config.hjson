@@ -1,0 +1,8 @@
+{
+    compound : True
+    account : 'xx'
+    privateKey : 'xx'
+    daysToClaim : 1
+    claimTimeHour : 22 //24hr formate
+    claimTimeMins : 20
+}
