@@ -1,8 +1,11 @@
 {
-    compound : True
-    account : 'xx'
-    privateKey : 'xx'
-    daysToClaim : 1
-    claimTimeHour : 22 //24hr formate
-    claimTimeMins : 20
+    //compound a new node once colleted rewards = cost of a Musha node
+    compound : True 
+    account : 'xx' //account 
+    privateKey : 'xx'   //your wallet private key
+    daysToClaim : 1 //how many days between claims
+    claimTimeHour : 22 //hour to claim 24hr formate
+    claimTimeMins : 20 // mins to claim
+    scheduleClaim: true // weather to create the a cheduled tqask to execute based on days to claim
+    namePrefix: "xxx" // when compound is enabled this name will be used with the number of nodes you have appended to the end.
 }

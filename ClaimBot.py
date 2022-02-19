@@ -1,8 +1,13 @@
 import asyncio
 import hjson
 import json
+import platform
+import time
+import windowsTask
 from web3 import Web3
 from datetime import datetime
+os = platform.system()
+print(os)
 
 with open('config.hjson', 'r') as f:
     config = hjson.load(f)
@@ -13,6 +18,7 @@ privateKey = config["privateKey"]
 daysToClaim = config["daysToClaim"]
 claimTimeHour = config["claimTimeHour"]
 claimTimeMins = config["claimTimeMins"]
+namePrefix = config["namePrefix"]
 
 w3 = Web3(Web3.HTTPProvider('https://rpc.ftm.tools/'))
 with open('hnrAbi.json', 'r') as f:
@@ -35,6 +41,7 @@ async def collectRewards():
     totalRewards = nodes*mushaReward
     
     if(poolBalance > nodes*mushaReward and poolBalance > 2000000000000000000000):
+        print("collecting reward")
         tx = hnrContract.functions.cashoutAll().buildTransaction({'nonce': w3.eth.getTransactionCount(account), "from": account, "gasPrice":gasPrice})
         signed_tx = w3.eth.account.signTransaction(tx, private_key=privateKey)
         raw_tx = w3.eth.sendRawTransaction(signed_tx.rawTransaction)
@@ -44,7 +51,7 @@ async def collectRewards():
         mushaPrice = hnrContract.functions.getMushaPrice().call()
 
         if(compound == True and balance >= mushaPrice):
-            name = "Mars" + str(nodes+1)
+            name = namePrefix + str(nodes+1)
         
             tx = hnrContract.functions.createNodeWithTokens(name,'MUSHA').buildTransaction({'nonce': w3.eth.getTransactionCount(account), "from": account, "gasPrice":gasPrice})
             signed_tx = w3.eth.account.signTransaction(tx, private_key=privateKey)
@@ -52,6 +59,15 @@ async def collectRewards():
 
             nodes+=1
             balance -= mushaPrice
+        if(config["scheduleClaim"] == True):
+            match os:
+                case "Windows":
+                    windowsTask.createSchedule()
+                case "Linux":
+                    print("need to implement Linux task scheduling")
+                case "Darwin":
+                    print("need to implement MacOs task scheduling")
+        
 
 async def checkTime():
     now = datetime.now()
@@ -59,8 +75,8 @@ async def checkTime():
     mins = int(now.strftime("%M"))
     claimMins = (claimTimeHour*60)+claimTimeMins
     print(hours,":",mins)
-    if(((hours*60)+mins)>claimMins):
-        #await collectRewards()
+    if(((hours*60)+mins)>=claimMins):
+        await collectRewards()
         print("collect")
     else:
         delayHours = claimTimeHour-hours
@@ -68,8 +84,9 @@ async def checkTime():
         if(delayMins < 0):
             delayHours -= 1
             delayMins = 60+delayMins
-
-        delay = (delayHours*3600000)+(delayMins*60000)
+        print("waiting: "  ,delayHours ,":",delayMins)
+        time.sleep((delayHours*360)+(delayMins*60))
+        await checkTime()
     
 
 async def main():
