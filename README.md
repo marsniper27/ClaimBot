@@ -1,6 +1,6 @@
 install python if not installed https://www.python.org/downloads/
 
-run the following command in cmd to install required packages:
+run the following command in cmd or powershell to install required packages:
 
 pip install hjson
 
@@ -13,3 +13,5 @@ once claim and node creation is done a new task will be scheduled and the bot wi
 First claim will occure at the tiem set on the day the bot is initially run.
 
 changes to the config file will take effect wither the next tiem the scheduled task runs or if you run the index.py file manually (this will do a claim the day it is run)
+
+*****curently task scheduling is only working on windows. I am working on the Linux/Mac scheduling still****
