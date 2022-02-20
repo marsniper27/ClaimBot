@@ -3,6 +3,7 @@ install python if not installed https://www.python.org/downloads/
 run the following command in cmd or powershell to install required packages:
 
 pip install hjson
+pip install pywin32
 
 Open config.hjson in a text editor and update the settings to match your needs.
 
