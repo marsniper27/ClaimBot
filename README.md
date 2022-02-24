@@ -16,3 +16,6 @@ First claim will occure at the tiem set on the day the bot is initially run.
 changes to the config file will take effect wither the next tiem the scheduled task runs or if you run the index.py file manually (this will do a claim the day it is run)
 
 *****curently task scheduling is only working on windows. I am working on the Linux/Mac scheduling still****
+
+
+Donations 0xcE3Ad9d144eCd83C3651D7Ee20890cE4ED70e6dD
